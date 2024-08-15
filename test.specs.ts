@@ -9,17 +9,14 @@ describe('updateGridFieldMapping', () => {
             lov: 'lov',
             header: 'header',
             headerTooltip: 'test',
-          },
-        ],
-      },
+          }
+        ]
+      }
     });
-
     jest.spyOn(service.dataService, 'getFieldDataMap').mockReturnValue({
-      lov: [],
+      lov: []
     });
-
     jest.spyOn(service.translateService, 'instant').mockReturnValue('instant');
-
     jest.spyOn(service, 'updateColDefItem').mockImplementation(jest.fn());
     jest.spyOn(service, 'updateColDefHeader').mockImplementation(jest.fn());
     jest.spyOn(service, 'updateColDefHeaderTooltip').mockImplementation(jest.fn());
@@ -28,7 +25,6 @@ describe('updateGridFieldMapping', () => {
 
   it('should update the field mapping for dropdown type', () => {
     service.updateGridFieldMapping('gridName');
-
     expect(service.updateColDefItem).toHaveBeenCalled();
     expect(service.updateColDefHeader).toHaveBeenCalled();
     expect(service.updateColDefHeaderTooltip).toHaveBeenCalled();
@@ -44,13 +40,11 @@ describe('updateGridFieldMapping', () => {
             items: null,
             lov: 'lov',
             header: 'header',
-          },
-        ],
-      },
+          }
+        ]
+      }
     });
-
     service.updateGridFieldMapping('gridName');
-
     expect(service.updateColDefItem).toHaveBeenCalled();
     expect(service.updateColDefHeader).toHaveBeenCalled();
     expect(service.updateColDefHeaderTooltip).toHaveBeenCalled();
@@ -59,12 +53,11 @@ describe('updateGridFieldMapping', () => {
 
   it('should update the field mapping for calendar type', () => {
     const obj = {
-      data: {},
+      data: {}
     };
     service.datePipe = {
-      transform: jest.fn(),
+      transform: jest.fn()
     } as any;
-
     jest.spyOn(service.dataService, 'getFieldMap').mockReturnValue({
       gridName: {
         colDefs: [
@@ -74,14 +67,12 @@ describe('updateGridFieldMapping', () => {
             lov: 'lov',
             header: 'header',
             refId: 'refId',
-            cellRenderer: obj,
-          },
-        ],
-      },
+            cellRenderer: obj
+          }
+        ]
+      }
     });
-
     service.updateGridFieldMapping('gridName');
-
     expect(service.updateColDefItem).toHaveBeenCalled();
     expect(service.updateColDefHeader).toHaveBeenCalled();
     expect(service.updateColDefHeaderTooltip).toHaveBeenCalled();
@@ -98,14 +89,12 @@ describe('updateGridFieldMapping', () => {
             lov: 'lov',
             header: 'header',
             refId: 'refId',
-            cellRenderer: { data: {} },
-          },
-        ],
-      },
+            cellRenderer: { data: {} }
+          }
+        ]
+      }
     });
-
     service.updateGridFieldMapping('gridName');
-
     expect(service.updateColDefItem).toHaveBeenCalled();
     expect(service.updateColDefHeader).toHaveBeenCalled();
     expect(service.updateColDefHeaderTooltip).toHaveBeenCalled();
