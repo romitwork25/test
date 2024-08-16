@@ -123,3 +123,23 @@ it('populateDomainFromForm with form errors and array field', () => {
   });
 });
 
+// --------------------- 127 ts file (form-gridprocessing service.ts)
+it('#getFormFieldData should return the first element when parentObj[formField] is an array', async () => {
+  jest.spyOn(service.dataService, 'getFormList').mockReturnValue([
+    new FormGroup({
+      formField: new FormControl(),
+      arrayField: new FormControl(),
+      dateField: new FormControl(),
+      customField: new FormControl(),
+    }),
+  ]);
+
+  let parentObj = { formField: ['firstElement', 'secondElement'] };
+  let refKey = 'key';
+  
+  const result = await service.getFormFieldData('formField', parentObj, refKey);
+  
+  expect(result).toBe('firstElement');
+});
+
+
