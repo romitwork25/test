@@ -1,4 +1,7 @@
-console.log('updateColDefItem called:', service.updateColDefItem.mock.calls.length > 0);
-  console.log('updateColDefHeader called:', service.updateColDefHeader.mock.calls.length > 0);
-  console.log('updateColDefHeaderTooltip called:', service.updateColDefHeaderTooltip.mock.calls.length > 0);
-  console.log('updateColDefCellRenderer called:', service.updateColDefCellRenderer.mock.calls.length > 0);
+
+await service.handleAuthorizeAction(action).toPromise();
+
+  // Assert that authorizeWorkingCopy was called with the expected data
+  expect(guiHttpHelperService.authorizeWorkingCopy).toHaveBeenCalledWith(expect.objectContaining({
+    [serviceConstants.SUPPORT_POJO]: { key1: 'value1' } // Check that supportData is included
+  }));
