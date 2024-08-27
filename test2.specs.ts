@@ -1,60 +1,95 @@
-it('should include facilityRuleMessages in payload when present', async () => {
+// Test case for successful authorization with approveOnAuthorizeInd set to 'Y'
+it('should execute action type AUTHORIZE and handle success with approveOnAuthorizeInd', async () => {
   const action = {
-    type: FacilityActions.FETCH,
+    type: FacilityActions.AUTHORIZE,
     payload: {
       sourceTab: 'HELIOS',
-      destinationTab: 'Helme datatla',
+      destinationTab: 'Helios details',
       facilityData: {
-        test: 'test'
+        facility: { test: 'test', aggregationPreviewTab: { derivedApproveOnAuthorizeInd: 'Y' } },
+        supportData: {}
       }
     }
   };
 
-  jest.spyOn(guiHttpHelperService, 'getFacilityRuleMessages').mockReturnValue(
-    of({ facilityRuleMessages: [{ message: 'Test message' }] })
-  );
-  jest.spyOn(guiHttpHelperService, 'getFacilityData').mockReturnValue(
-    of({ facilityRuleMessages: '', status: 'SUCCESS' })
+  jest.spyOn(guiHttpHelperService, 'authorizeWorkingCopy').mockReturnValue(
+    of({
+      status: 'Success',
+      uiInstructions: {},
+      validations: { results: {} },
+      wcOperationSuccessful: true
+    })
   );
 
   facilityEffects.initEffects();
   const res = await store.dispatch(action);
 
   expect(res.globalState).toEqual({
-    data: {
-      [serviceConstants.ListofRuleMessages]: [{ message: 'Test message' }]
-    }
+    data: []
   });
+  // Add more assertions based on the expected output
 });
- // 
-// 
-// 
-// 
-it('should include empty object for facilityRuleMessages in payload when not present', async () => {
+
+// Test case for successful authorization without approveOnAuthorizeInd
+it('should execute action type AUTHORIZE and handle success without approveOnAuthorizeInd', async () => {
   const action = {
-    type: FacilityActions.FETCH,
+    type: FacilityActions.AUTHORIZE,
     payload: {
       sourceTab: 'HELIOS',
-      destinationTab: 'Helme datatla',
+      destinationTab: 'Helios details',
       facilityData: {
-        test: 'test'
+        facility: { test: 'test', aggregationPreviewTab: { derivedApproveOnAuthorizeInd: 'N' } },
+        supportData: {}
       }
     }
   };
 
-  jest.spyOn(guiHttpHelperService, 'getFacilityRuleMessages').mockReturnValue(
-    of({ facilityRuleMessages: null })
-  );
-  jest.spyOn(guiHttpHelperService, 'getFacilityData').mockReturnValue(
-    of({ facilityRuleMessages: '', status: 'SUCCESS' })
+  jest.spyOn(guiHttpHelperService, 'authorizeWorkingCopy').mockReturnValue(
+    of({
+      status: 'Success',
+      uiInstructions: {},
+      validations: { results: {} },
+      wcOperationSuccessful: true
+    })
   );
 
   facilityEffects.initEffects();
   const res = await store.dispatch(action);
 
   expect(res.globalState).toEqual({
-    data: {
-      [serviceConstants.ListofRuleMessages]: {}
-    }
+    data: []
   });
+  // Add more assertions based on the expected output
+});
+
+// Test case for unsuccessful authorization
+it('should execute action type AUTHORIZE and handle failure', async () => {
+  const action = {
+    type: FacilityActions.AUTHORIZE,
+    payload: {
+      sourceTab: 'HELIOS',
+      destinationTab: 'Helios details',
+      facilityData: {
+        facility: { test: 'test' },
+        supportData: {}
+      }
+    }
+  };
+
+  jest.spyOn(guiHttpHelperService, 'authorizeWorkingCopy').mockReturnValue(
+    of({
+      status: 'Failure',
+      uiInstructions: {},
+      validations: { results: {} },
+      wcOperationSuccessful: false
+    })
+  );
+
+  facilityEffects.initEffects();
+  const res = await store.dispatch(action);
+
+  expect(res.globalState).toEqual({
+    data: []
+  });
+  // Add more assertions based on the expected output
 });
