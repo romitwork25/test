@@ -1,39 +1,43 @@
-it('should assign an empty object when facilityRuleMessages is absent', async () => {
-    const action = {
-        type: FacilityActions.FETCH,
-        payload: {
-            sourceTab: 'HELIOS',
-            destinationTab: 'Helme',
-            facilityData: { test: 'test' },
-            facility: { test: 'test' }
-        }
-    };
+it('should handle facilityRuleMessagesResp.facilityRuleMessages being truthy', async () => {
+  const action = {
+    type: FacilityActions.FETCH,
+    payload: {
+      sourceTab: 'HELIOS',
+      destinationTab: 'Helme datatla',
+      facilityData: { test: 'test' },
+      facility: { test: 'test' },
+    },
+  };
 
-    // Mock the getFacilityRuleMessages to return null or undefined
-    jest.spyOn(guiHttpHelperService, 'getFacilityRuleMessages').mockReturnValue(of({ facilityRuleMessages: null }));
+  jest.spyOn(guiHttpHelperService, 'getFacilityRuleMessages').mockReturnValue(of({
+    facilityRuleMessages: { message: 'Some rule message' },
+  }));
 
-    // Other necessary mocks (you can reuse these if they are common in your test setup)
-    jest.spyOn(guiHttpHelperService, 'getUIValidated').mockReturnValue(
-        of({
-            status: 'SUCCESS',
-            facilityWcPojo: {},
-            uiInstructions: {},
-            validations: { results: {} },
-            authorizeEnabled: true,
-            submitEnabled: true,
-            approveEnabled: true,
-            supportPojo: { facilitySupports: '' }
-        })
-    );
+  facilityEffects.initEffects();
+  const res = await store.dispatch(action);
 
-    facilityEffects.initEffects();
-    const res = await store.dispatch(action);
+  expect(res.globalState).toEqual({ data: [] });
+  expect(res.payload[serviceConstants.ListofRuleMessages]).toEqual({ message: 'Some rule message' });
+});
 
-    // Assert that ListofRuleMessages is assigned to an empty object
-    expect(res.globalState).toEqual({
-        data: {
-            ...res.globalState.data, // Preserving the existing structure
-            [serviceConstants.ListofRuleMessages]: {}
-        }
-    });
+it('should handle facilityRuleMessagesResp.facilityRuleMessages being falsy', async () => {
+  const action = {
+    type: FacilityActions.FETCH,
+    payload: {
+      sourceTab: 'HELIOS',
+      destinationTab: 'Helme datatla',
+      facilityData: { test: 'test' },
+      facility: { test: 'test' },
+    },
+  };
+
+  jest.spyOn(guiHttpHelperService, 'getFacilityRuleMessages').mockReturnValue(of({
+    facilityRuleMessages: null, // or undefined
+  }));
+
+  facilityEffects.initEffects();
+  const res = await store.dispatch(action);
+
+  expect(res.globalState).toEqual({ data: [] });
+  expect(res.payload[serviceConstants.ListofRuleMessages]).toEqual({});
 });
